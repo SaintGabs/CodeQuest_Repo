@@ -2,7 +2,7 @@ import requests#Importa a biblioteca requests para fazer requisições
 import pprint#Importa a biblioteca pprint para imprimir os dados de forma bonita
 import os #usar variaveis de ambiente
 url = "http://api.weatherapi.com/v1/current.json"#Url da api
-key = ''#token de acesso
+key = 'Cole sua chave aqui'#token de acesso
 params = {"key": key,"q": "Brasilia","lang": "pt"}#Parametros
 resposta = requests.get(url, params)#request para a api com os parametros
 if resposta.status_code == 200:#Verifica se o request deu certo

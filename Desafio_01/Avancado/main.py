@@ -8,3 +8,4 @@ def hello_world():#mostrar
 
 if __name__ == '__main__': #Só roda se estiver sendo executado por aq
     app.run(debug=True)
+

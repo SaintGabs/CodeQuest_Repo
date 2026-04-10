@@ -1,10 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Homepage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadro Kanban de Post-its</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>Hello World!</h1>
+    <main class="app-shell">
+        <header class="page-header">
+            <div>
+                <h1>Quadro Kanban de Post-its</h1>
+                <p>Arraste e solte os post-its entre as colunas para organizar tarefas rapidamente. Use o formulário abaixo para criar novas notas.</p>
+            </div>
+            <span class="badge">Arraste e solte</span>
+        </header>
+
+        <section class="board">
+            <div class="column">
+                <div class="column-header">
+                    <h2>Para Fazer</h2>
+                    <span class="badge">To Do</span>
+                </div>
+                <div class="column-content" id="todo-column">
+                    <article class="note" draggable="true">
+                        <div>
+                            <h3>Planejar apresentação</h3>
+                            <p>Escrever os tópicos principais e definir o tempo de cada parte.</p>
+                        </div>
+                        <div class="note-actions">
+                            <small>Arraste para mover</small>
+                            <button type="button" class="delete-note">Excluir</button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="column-header">
+                    <h2>Em Progresso</h2>
+                    <span class="badge">Doing</span>
+                </div>
+                <div class="column-content" id="doing-column"></div>
+            </div>
+
+            <div class="column">
+                <div class="column-header">
+                    <h2>Concluído</h2>
+                    <span class="badge">Done</span>
+                </div>
+                <div class="column-content" id="done-column"></div>
+            </div>
+        </section>
+
+        <section class="add-panel">
+            <form id="add-note-form">
+                <label>
+                    Título da nota
+                    <input id="note-title" name="title" placeholder="Ex: Revisar código" required>
+                </label>
+                <label>
+                    Descrição
+                    <textarea id="note-text" name="text" placeholder="Descreva a tarefa aqui" required></textarea>
+                </label>
+                <label>
+                    Coluna de destino
+                    <select id="note-status" name="status">
+                        <option value="todo">Para Fazer</option>
+                        <option value="doing">Em Progresso</option>
+                        <option value="done">Concluído</option>
+                    </select>
+                </label>
+                <button type="submit">Adicionar post-it</button>
+            </form>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

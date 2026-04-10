@@ -1,84 +1,75 @@
-const columns = document.querySelectorAll('.column-content');
-const addNoteForm = document.getElementById('add-note-form');
-const noteTitle = document.getElementById('note-title');
-const noteText = document.getElementById('note-text');
-const noteStatus = document.getElementById('note-status');
+let notaArrastada = null;
 
-let draggedNote = null;
-
-function updateDragControls() {
-  document.querySelectorAll('.note').forEach(note => {
-    note.addEventListener('dragstart', () => {
-      draggedNote = note;
-      note.classList.add('dragging');
-    });
-
-    note.addEventListener('dragend', () => {
-      draggedNote = null;
-      note.classList.remove('dragging');
-    });
-  });
+async function carregarNotas() {
+    const res = await fetch('/get_notes');
+    const notas = await res.json();
+    notas.forEach(n => criarElementoNota(n[1], n[2], n[0]));
 }
 
-function createNoteElement(title, text) {
-  const note = document.createElement('article');
-  note.className = 'note';
-  note.draggable = true;
-  note.innerHTML = `
-    <div>
-      <h3>${title}</h3>
-      <p>${text}</p>
-    </div>
-    <div class="note-actions">
-      <small>Arraste para mover</small>
-      <button type="button" class="delete-note">Excluir</button>
-    </div>
-  `;
+function criarElementoNota(conteudo = '', colunaId = 'todo-column', id = null) {
+    const nota = document.createElement('textarea');
+    nota.className = 'post-it';
+    nota.value = conteudo;
+    nota.draggable = true;
+    if (id) nota.dataset.id = id;
 
-  note.querySelector('.delete-note').addEventListener('click', () => {
-    note.remove();
-  });
+    const salvarOuAtualizar = async () => {
+        const dados = {
+            conteudo: nota.value,
+            coluna: nota.parentElement ? nota.parentElement.id : colunaId,
+            id: nota.dataset.id
+        };
 
-  return note;
+        if (nota.dataset.id) {
+            await fetch('/update_note', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(dados)
+            });
+        } else {
+            const res = await fetch('/save_note', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(dados)
+            });
+            const info = await res.json();
+            nota.dataset.id = info.id;
+        }
+    };
+
+    nota.addEventListener('blur', salvarOuAtualizar);
+    nota.addEventListener('dragstart', () => { notaArrastada = nota; });
+    nota.addEventListener('dragend', () => { notaArrastada = null; });
+
+    document.getElementById(colunaId).appendChild(nota);
 }
 
-function initializeColumns() {
-  columns.forEach(column => {
-    column.addEventListener('dragover', event => {
-      event.preventDefault();
-      column.classList.add('drag-over');
+document.querySelectorAll('.column-content').forEach(coluna => {
+    coluna.addEventListener('dragover', e => {
+        e.preventDefault();
+        coluna.classList.add('drag-over');
     });
 
-    column.addEventListener('dragleave', () => {
-      column.classList.remove('drag-over');
+    coluna.addEventListener('dragleave', () => coluna.classList.remove('drag-over'));
+
+    coluna.addEventListener('drop', async () => {
+        coluna.classList.remove('drag-over');
+        if (notaArrastada) {
+            coluna.appendChild(notaArrastada);
+            const dados = {
+                conteudo: notaArrastada.value,
+                coluna: coluna.id,
+                id: notaArrastada.dataset.id
+            };
+            await fetch('/update_note', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(dados)
+            });
+        }
     });
-
-    column.addEventListener('drop', event => {
-      event.preventDefault();
-      column.classList.remove('drag-over');
-      if (!draggedNote) return;
-      column.appendChild(draggedNote);
-    });
-  });
-}
-
-addNoteForm.addEventListener('submit', event => {
-  event.preventDefault();
-
-  const title = noteTitle.value.trim();
-  const text = noteText.value.trim();
-  const status = noteStatus.value;
-
-  if (!title || !text) {
-    return;
-  }
-
-  const note = createNoteElement(title, text);
-  document.getElementById(`${status}-column`).appendChild(note);
-  updateDragControls();
-
-  addNoteForm.reset();
 });
 
-initializeColumns();
-updateDragControls();
+document.getElementById('btn-criar').addEventListener('click', () => criarElementoNota());
+
+carregarNotas();

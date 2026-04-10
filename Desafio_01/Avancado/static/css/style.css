@@ -1,211 +1,25 @@
 :root {
-  --bg: #f5f7fb;
-  --board: #eef3fc;
-  --card: #fff7c8;
-  --card-accent: #f6e58d;
-  --text: #222;
-  --secondary: #5a6d9f;
-  --border: rgba(0, 0, 0, 0.08);
-  --shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    --bg: #f4f7f6;
+    --column-bg: #ebedef;
+    --card: #fff9c4;
 }
 
-* {
-  box-sizing: border-box;
+body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+
+#btn-criar { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+
+.board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.column { background: var(--column-bg); border-radius: 8px; padding: 15px; min-height: 80vh; }
+
+.column-content { min-height: 70vh; display: flex; flex-direction: column; gap: 10px; }
+
+.post-it {
+    background: var(--card); padding: 15px; border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); min-height: 80px;
+    cursor: grab; border: none; font-family: inherit; resize: none;
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: radial-gradient(circle at top, rgba(145, 180, 255, 0.24), transparent 38%),
-    linear-gradient(180deg, #eef3fc 0%, #f7f9fe 100%);
-  color: var(--text);
-}
-
-.app-shell {
-  max-width: 1220px;
-  margin: 0 auto;
-  padding: 28px 24px 48px;
-}
-
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
-}
-
-.page-header h1 {
-  margin: 0;
-  font-size: clamp(2rem, 2.5vw, 3rem);
-  letter-spacing: -0.04em;
-}
-
-.page-header p {
-  margin: 0;
-  max-width: 640px;
-  color: #50576f;
-  line-height: 1.6;
-}
-
-.board {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 20px;
-}
-
-.column {
-  background: var(--board);
-  border: 1px solid var(--border);
-  border-radius: 26px;
-  box-shadow: var(--shadow);
-  padding: 18px;
-  min-height: 520px;
-  display: flex;
-  flex-direction: column;
-}
-
-.column-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.column-header h2 {
-  margin: 0;
-  font-size: 1.05rem;
-}
-
-.badge {
-  background: #d8e1ff;
-  color: #2f4bae;
-  padding: 8px 12px;
-  border-radius: 999px;
-  font-size: 0.86rem;
-  font-weight: 600;
-}
-
-.column-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 6px;
-}
-
-.column-content.drag-over {
-  background: rgba(247, 255, 149, 0.22);
-  border-radius: 18px;
-}
-
-.note {
-  padding: 18px 16px 16px;
-  border-radius: 22px;
-  background: linear-gradient(135deg, #fff9af 0%, #fff1a8 100%);
-  border: 1px solid rgba(255, 204, 0, 0.2);
-  box-shadow: 0 10px 24px rgba(84, 84, 84, 0.08);
-  cursor: grab;
-  display: grid;
-  gap: 10px;
-}
-
-.note:active {
-  cursor: grabbing;
-}
-
-.note h3 {
-  margin: 0;
-  font-size: 1rem;
-}
-
-.note p {
-  margin: 0;
-  color: #3e3a0f;
-  line-height: 1.5;
-  opacity: 0.9;
-}
-
-.note small {
-  display: block;
-  color: #5d6047;
-}
-
-.note .note-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-
-.note button {
-  border: none;
-  background: transparent;
-  color: #5a5a5a;
-  cursor: pointer;
-  font-size: 0.95rem;
-}
-
-.note button:hover {
-  color: #1b1b1b;
-}
-
-.add-panel {
-  margin-top: 26px;
-  background: #fff;
-  border: 1px solid rgba(31, 24, 73, 0.08);
-  border-radius: 24px;
-  padding: 18px;
-  display: grid;
-  gap: 14px;
-}
-
-.add-panel label {
-  display: grid;
-  gap: 6px;
-  font-size: 0.95rem;
-  color: #3f4661;
-}
-
-.add-panel input,
-.add-panel textarea,
-.add-panel select,
-.add-panel button {
-  width: 100%;
-  border: 1px solid rgba(74, 89, 148, 0.16);
-  border-radius: 14px;
-  padding: 12px 14px;
-  font: inherit;
-}
-
-.add-panel textarea {
-  min-height: 90px;
-  resize: vertical;
-}
-
-.add-panel button {
-  background: #4a61dd;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.add-panel button:hover {
-  transform: translateY(-1px);
-  background: #3347b8;
-}
-
-@media (max-width: 720px) {
-  .app-shell {
-    padding: 20px 18px 32px;
-  }
-
-  .column {
-    min-height: 420px;
-  }
-}
+.drag-over { background: #dfe1e2; border: 2px dashed #6c757d; }
